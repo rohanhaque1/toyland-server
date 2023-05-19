@@ -8,7 +8,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// console.log(process.env.DB_USER)
+
 
 
 const uri =
@@ -26,7 +26,20 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+      await client.connect();
+
+      const toyCollection = client.db('toyDB').collection('toys')
+      
+      app.post('/toys', async (req, res) => {
+          const newToys = req.body;
+          const result = await toyCollection.insertOne(newToys)
+          res.send(result)
+      })
+
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
