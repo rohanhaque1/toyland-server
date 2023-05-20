@@ -31,6 +31,12 @@ async function run() {
       res.send(cursor);
     });
 
+    app.get("/toys", async(req, res) => {
+      const limit = req.query.limit ? parseInt(req.query.limit) : 20;
+      const result = await toyCollection.slice(0, limit);
+      res.json(result);
+    });
+
     app.get("/toys/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -56,7 +62,11 @@ async function run() {
           quantity: toys.quantity,
         },
       };
-      const result = await toyCollection.updateOne(filter, updatedToys, options)
+      const result = await toyCollection.updateOne(
+        filter,
+        updatedToys,
+        options
+      );
       res.send(result);
     });
 
